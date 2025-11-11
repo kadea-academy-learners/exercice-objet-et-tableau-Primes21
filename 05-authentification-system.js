@@ -18,14 +18,85 @@
 //    - Si l'utilisateur est bloqué (`estBloque` à true), retourne un message d'erreur spécifique.
 //    - Sinon, met à jour `estConnecte` à true pour cet utilisateur et retourne l'objet utilisateur connecté.
 
-const baseDeDonnees = [];
+const baseDeDonnees = [
+	{
+  id: 1,
+  nom: "Elie",
+  email: "elie@example.com",
+  password: "1234",
+  estConnecte: true,
+  estBloque: false
+},
+{
+  id: 2,
+  nom: "fofo",
+  email: "fofo@example.com",
+  password: "5678",
+  estConnecte: false,
+  estBloque: false
+},
+{
+  id: 2,
+  nom: "jean",
+  email: "jean@example.com",
+  password: "9012",
+  estConnecte: false,
+  estBloque: true
+,}
+
+
+];
 
 function signUp(nom, email, password, confirmPassword) {
-	
+  // Vérifier si l'email existe déjà
+  for (let i = 0; i < baseDeDonnees.length; i++) {
+    if (baseDeDonnees[i].email === email) {
+      return "Cet email est déjà utilisé.";
+    }
+  }
+
+  // Vérifier si les mots de passe correspondent
+  if (password !== confirmPassword) {
+    return "Les mots de passe ne correspondent pas";
+  }
+
+  // Créer un nouvel utilisateur
+  let nouvelUtilisateur = {
+    id: baseDeDonnees.length + 1,
+    nom: nom,
+    email: email,
+    password: password,
+    estConnecte: false,
+    estBloque: false
+  };
+
+  // Ajouter dans la base
+  baseDeDonnees.push(nouvelUtilisateur);
+
+  return nouvelUtilisateur;
 }
 
-function login() {
-	
+// --------------- CONNEXION ----------------
+function login(email, password) {
+  for (let i = 0; i < baseDeDonnees.length; i++) {
+    let user = baseDeDonnees[i];
+
+    if (user.email === email) {
+      if (user.estBloque) {
+        return "Utilisateur bloqué.";
+      }
+
+      if (user.password !== password) {
+        return "Mot de passe incorrect.";
+      }
+
+      user.estConnecte = true;
+      return user;
+    }
+  }
+
+  return "Utilisateur non trouvé.";
 }
+
 
 module.exports = { baseDeDonnees, signUp, login };
